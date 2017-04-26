@@ -48,13 +48,12 @@ ul {
     /* убрать между inline-block li лишние пробелы, которые есть в HTML */
     /* http://davidwalsh.name/remove-whitespace-inline-block */
     font-size: 0;
-    transition: all 0.5s ease-in-out;
+    transition: all 0.5s;
 }
 ul img {
     width: 130px;
     height: 130px;
     /* по умолчанию inline, но в ряде браузеров это даст лишнее пространство вокруг элементов */
-
     display: block;
 }
 ul li {
