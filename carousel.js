@@ -15,19 +15,20 @@ class Carousel {
       scrollStep: 3,
     };
     this.options = Object.assign({}, defaultOptions, options);
-    this.btnPrev = element.querySelector(this.options.btnPrevSelector);
-    this.btnNext = element.querySelector(this.options.btnNextSelector);
     this.container = element.querySelector(this.options.containerSelector);
-    this.scrollPosition = 0;
     this.positionOffset = [];
-
     const items = this.container.querySelectorAll(this.options.itemsSelector);
     Array.prototype.forEach.call(items, (item, i) => {
       this.positionOffset[i] = i
         ? this.positionOffset[i - 1] + items[i - 1].getBoundingClientRect().width
         : 0;
     });
+    this.scrollPosition = 0;
+    this.scrollMaxPosition = this.positionOffset.length - this.options.scrollStep;
+    this.btnPrev = element.querySelector(this.options.btnPrevSelector);
+    this.btnNext = element.querySelector(this.options.btnNextSelector);
 
+    this.setButtonsAttributes();
     this.btnPrev.addEventListener('click', this.scroll.bind(this, -1));
     this.btnNext.addEventListener('click', this.scroll.bind(this, 1));
   }
@@ -38,20 +39,31 @@ class Carousel {
    */
   scroll(direction = 1) {
     this.scrollPosition += this.options.scrollStep * direction;
-    if (this.scrollPosition < 0) {
+    if (this.scrollPosition <= 0) {
       this.scrollPosition = 0;
-      this.btnPrev.classList.add('hidden');
-    } else {
-      this.btnPrev.classList.remove('hidden');
-    }
-    if (this.scrollPosition >= this.positionOffset.length - this.options.scrollStep) {
-      this.scrollPosition = this.positionOffset.length - this.options.scrollStep;
-      this.btnNext.classList.add('hidden');
-    } else {
-      this.btnNext.classList.remove('hidden');
+    } else if (this.scrollPosition >= this.scrollMaxPosition) {
+      this.scrollPosition = this.scrollMaxPosition;
     }
 
+    this.setButtonsAttributes();
     this.scrollTo(this.container, this.scrollPosition);
+  }
+
+  /**
+   * Set the buttons visibility depends of the current scroll posotion.
+   */
+  setButtonsAttributes() {
+    if (this.scrollPosition <= 0) {
+      this.btnPrev.classList.add('hidden');
+    } else if (this.btnPrev.classList.contains('hidden')) {
+      this.btnPrev.classList.remove('hidden');
+    }
+
+    if (this.scrollPosition >= this.scrollMaxPosition) {
+      this.btnNext.classList.add('hidden');
+    } else if (this.btnNext.classList.contains('hidden')) {
+      this.btnNext.classList.remove('hidden');
+    }
   }
 
   /**
