@@ -2,7 +2,7 @@
 
 class Carousel {
   /**
-   * The constructor. Initialize carousetl, add events.
+   * The constructor. Initialize carousel, add events.
    * @param {HTMLElement} element
    * @param {object} options
    */
@@ -29,16 +29,21 @@ class Carousel {
     this.btnNext = element.querySelector(this.options.btnNextSelector);
 
     this.setButtonsAttributes();
-    this.btnPrev.addEventListener('click', this.scroll.bind(this, -1));
-    this.btnNext.addEventListener('click', this.scroll.bind(this, 1));
+    element.addEventListener('click', this.scroll.bind(this));
   }
 
   /**
    * Next/Previous scroll button callback.
-   * @param {number} direction The direction (1 - next, -1 - previous)
+   * @param {event} event
    */
-  scroll(direction = 1) {
-    this.scrollPosition += this.options.scrollStep * direction;
+  scroll(event) {
+    if (event.target === this.btnPrev) {
+      this.scrollPosition -= this.options.scrollStep;
+    } else if (event.target === this.btnNext) {
+      this.scrollPosition += this.options.scrollStep;
+    } else {
+      return;
+    }
     if (this.scrollPosition <= 0) {
       this.scrollPosition = 0;
     } else if (this.scrollPosition >= this.scrollMaxPosition) {
